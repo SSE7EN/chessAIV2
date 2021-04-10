@@ -14,7 +14,7 @@
 #include "board.hpp"
 
 int main(){
-    std::unique_ptr<Board> board = std::make_unique<Board>();
+    // std::unique_ptr<Board> board = std::make_unique<Board>();
     
 
     return 0;

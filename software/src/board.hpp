@@ -1,4 +1,5 @@
-#pragma once
+#ifndef _SRC_BOARD_HPP_
+#define _SRC_BOARD_HPP_
 /**
  **************************
  * @file    enum.hpp
@@ -20,7 +21,7 @@ class Coordinate{
             this->setCoordinate(coordinate);
         }
         Coordinate(){};
-        int getCoordiante(){return this->coordinate;};
+        int getCoordinate(){return this->coordinate;};
         void setCoordinate(int coordinate);
 
 
@@ -66,4 +67,4 @@ class Board{
         std::array<Spot, 64> board;
 };
 
-
+#endif

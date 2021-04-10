@@ -1,4 +1,6 @@
-#pragma once
+#ifndef _SRC_ENUM_HPP_
+#define _SRC_ENUM_HPP_
+
 /**
  **************************
  * @file    enum.hpp
@@ -10,3 +12,5 @@
 
 enum class EPieceCode{PAWN, ROOK, BISHOP, KNIGHT, QUEEN, KING};
 enum class EColor{WHITE, BLACK};
+
+#endif

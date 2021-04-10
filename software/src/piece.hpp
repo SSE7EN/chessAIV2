@@ -1,4 +1,5 @@
-#pragma once
+#ifndef _SRC_PIECE_HPP_
+#define _SRC_PIECE_HPP_
 /**
  **************************
  * @file    piece.hpp
@@ -27,8 +28,6 @@ class Piece{
         virtual void move(Move &move) = 0;
         virtual ~Piece() = default;
 
-
-
     protected:
         void setPiece(Spot *spot){
             this->spot = spot;
@@ -47,13 +46,6 @@ class Pawn: public Piece{
         void move(Move &move) override{};
 };
 
-Pawn::Pawn(EColor color):Piece{color}{
-    this->ePieceCode = EPieceCode::PAWN;
-};
-
-Pawn::Pawn(EColor color, Spot &spot):Piece{color, spot}{
-    this->ePieceCode = EPieceCode::PAWN;
-};
 
 class PieceSet{
     public:
@@ -69,3 +61,4 @@ class PieceSet{
 
 };
 
+#endif
