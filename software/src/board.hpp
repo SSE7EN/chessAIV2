@@ -32,7 +32,7 @@ class Coordinate{
             this->setCoordinate(coordinate);
         }
         Coordinate(){};
-        int getCoordinate(){return this->coordinate;};
+        int getCoordinate() const {return this->coordinate;}
         void setCoordinate(int coordinate);
 
 
@@ -65,7 +65,7 @@ class Spot{
     private:
         Coordinate cordX;
         Coordinate cordY;
-        Piece *piece;
+        Piece *piece = nullptr;
         Board &board;
 };
 

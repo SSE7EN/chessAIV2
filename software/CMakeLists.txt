@@ -80,6 +80,9 @@ else ()
     target_compile_definitions (${TARGET_NAME} PRIVATE NDEBUG)
 endif ()
 
+# Common set of warnings
+# set_project_warnings (${TARGET_NAME})
+
 # ----------------------------------------------------
 # Installation
 # ----------------------------------------------------

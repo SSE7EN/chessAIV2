@@ -38,7 +38,7 @@ class Piece{
 
 
         EColor eColor;
-        Spot *spot;
+        Spot *spot = nullptr;
         char pieceCharacter;
 };
 

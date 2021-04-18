@@ -46,7 +46,7 @@ std::unique_ptr<Move> Pawn::checkOneForward(Board &brd){
     std::unique_ptr<Move> move = nullptr;
 
     //start coordinates
-    Coordinate cordX = spot->getCordX();
+    const Coordinate cordX = spot->getCordX();
     Coordinate cordY = spot->getCordY();
 
     //end coordinates
