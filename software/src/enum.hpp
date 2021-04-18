@@ -11,6 +11,6 @@
  */
 
 enum class EPieceCode{PAWN, ROOK, BISHOP, KNIGHT, QUEEN, KING};
-enum class EColor{WHITE, BLACK};
+enum class EColor{WHITE = 1, BLACK = -1};
 
 #endif
