@@ -49,7 +49,7 @@ class Move{
         virtual int getValue() const {return 1;}
         virtual MoveType getMoveType(){return MoveType::Move;}
 
-        void * operator new(size_t size, MempoolManager<Move, TakeMove,CastleMove,PawnSpecialTakeMove> &mempool);
+//        void * operator new(size_t size, MempoolManager<Move, TakeMove,CastleMove,PawnSpecialTakeMove> &mempool);
     protected:
         friend class MoveHistory;
 

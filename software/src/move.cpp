@@ -22,7 +22,7 @@
 /************************************* Implementions *************************************/
 
 
-void * Move::operator new(size_t size, MempoolManager<Move, TakeMove,CastleMove,PawnSpecialTakeMove> &mempool)
-{
-    mempool.allocateBlock1();
-}
+// void * Move::operator new(size_t size, MempoolManager<Move, TakeMove,CastleMove,PawnSpecialTakeMove> &mempool)
+// {
+//     mempool.allocateBlock1();
+// }
