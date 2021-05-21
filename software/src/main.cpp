@@ -11,12 +11,12 @@
 /*-------------------------------- Includes ---------------------- */
 #include <iostream>
 #include <memory>
-#include "board.hpp"
+
+#include "game.hpp"
 
 int main(){
-    std::unique_ptr<Board> board = std::make_unique<Board>();
-    board->display();
-    board->test();
+    Game game{};
 
+    game.start();
     return 0;
 }

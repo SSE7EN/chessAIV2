@@ -26,9 +26,26 @@ set (CMAKE_CXX_STANDARD 17)
 # ----------------------------------------------------
 
 set (APPLICATION_SOURCE_FILES
-    ${APPLICATION_PATH}/src/board.cpp
-    ${APPLICATION_PATH}/src/piece.cpp
     ${APPLICATION_PATH}/src/main.cpp
+    ${APPLICATION_PATH}/src/displayBoard.cpp
+    ${APPLICATION_PATH}/src/boardEvaluator.cpp
+    ${APPLICATION_PATH}/src/aiEngine.cpp
+    ${APPLICATION_PATH}/src/game.cpp
+    ${APPLICATION_PATH}/src/board.cpp
+    ${APPLICATION_PATH}/src/spot.cpp
+    ${APPLICATION_PATH}/src/piece.cpp
+    ${APPLICATION_PATH}/src/linePiece.cpp
+    ${APPLICATION_PATH}/src/pieceSet.cpp
+    ${APPLICATION_PATH}/src/pawn.cpp
+    ${APPLICATION_PATH}/src/rook.cpp
+    ${APPLICATION_PATH}/src/knight.cpp
+    ${APPLICATION_PATH}/src/bishop.cpp
+    ${APPLICATION_PATH}/src/queen.cpp
+    ${APPLICATION_PATH}/src/king.cpp
+    ${APPLICATION_PATH}/src/util.cpp
+    ${APPLICATION_PATH}/src/move.cpp
+    ${APPLICATION_PATH}/src/moveHistory.cpp
+    ${APPLICATION_PATH}/src/moveManager.cpp
 )
 
 # ----------------------------------------------------

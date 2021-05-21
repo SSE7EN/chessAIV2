@@ -10,7 +10,8 @@
  **************************
  */
 
-enum class EPieceCode{PAWN, ROOK, BISHOP, KNIGHT, QUEEN, KING};
+enum class EPieceCode{PAWN = 0, ROOK = 1, BISHOP = 2, KNIGHT = 3, QUEEN = 4, KING = 5};
 enum class EColor{WHITE = 1, BLACK = -1};
+enum class MoveType{Move = 1, Take = 2, Castle = 3, SpecialPawnTake = 4};
 
 #endif

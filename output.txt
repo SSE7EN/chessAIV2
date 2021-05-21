@@ -1,0 +1,24 @@
+warning: fast build mode: omitting configuration phase
+make[1]: Entering directory '/home/se7en/Projects/chessAIV2/_build_debug'
+make[2]: Entering directory '/home/se7en/Projects/chessAIV2/_build_debug'
+make[3]: Entering directory '/home/se7en/Projects/chessAIV2/_build_debug'
+make[4]: Entering directory '/home/se7en/Projects/chessAIV2/_build_debug'
+make[4]: Leaving directory '/home/se7en/Projects/chessAIV2/_build_debug'
+make[4]: Entering directory '/home/se7en/Projects/chessAIV2/_build_debug'
+[  5%] Building CXX object software/CMakeFiles/chessAI.dir/src/main.cpp.o
+[ 23%] Building CXX object software/CMakeFiles/chessAI.dir/src/spot.cpp.o
+[ 23%] Building CXX object software/CMakeFiles/chessAI.dir/src/rook.cpp.o
+[ 23%] Building CXX object software/CMakeFiles/chessAI.dir/src/linePiece.cpp.o
+[ 35%] Building CXX object software/CMakeFiles/chessAI.dir/src/queen.cpp.o
+[ 35%] Building CXX object software/CMakeFiles/chessAI.dir/src/pieceSet.cpp.o
+[ 47%] Building CXX object software/CMakeFiles/chessAI.dir/src/piece.cpp.o
+[ 47%] Building CXX object software/CMakeFiles/chessAI.dir/src/pawn.cpp.o
+[ 52%] Building CXX object software/CMakeFiles/chessAI.dir/src/board.cpp.o
+[ 70%] Building CXX object software/CMakeFiles/chessAI.dir/src/king.cpp.o
+[ 70%] Building CXX object software/CMakeFiles/chessAI.dir/src/bishop.cpp.o
+[ 70%] Building CXX object software/CMakeFiles/chessAI.dir/src/knight.cpp.o
+[ 76%] Building CXX object software/CMakeFiles/chessAI.dir/src/moveManager.cpp.o
+make[4]: Leaving directory '/home/se7en/Projects/chessAIV2/_build_debug'
+make[3]: Leaving directory '/home/se7en/Projects/chessAIV2/_build_debug'
+make[2]: Leaving directory '/home/se7en/Projects/chessAIV2/_build_debug'
+make[1]: Leaving directory '/home/se7en/Projects/chessAIV2/_build_debug'

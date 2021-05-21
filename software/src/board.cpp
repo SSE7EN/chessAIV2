@@ -10,26 +10,29 @@
 
 /*-------------------------------- Includes ---------------------- */
 
-#include "board.hpp"
 #include <iostream>
+#include <vector>
+#include <algorithm>
+#include "board.hpp"
+#include "move.hpp"
 
-void Coordinate::setCoordinate(int coordinate)
+
+
+Spot& Board::operator()(int indexX, int indexY)
 {
-    if(coordinate >= 0 && coordinate <= 7){
-        this->coordinate = coordinate;
-    }
+
+    int i = GET_BOARD_INDEX(indexX,indexY);
+
+    return (this->board[i]);
+
 };
 
-Spot* Board::operator()(int indexX, int indexY)
+Spot& Board::getSpot(int cordX, int cordY)
 {
-    Spot* result = nullptr;
-    if(indexX >= 0 && indexX < 8 && indexY >= 0 && indexY < 8){
-        int i = GET_BOARD_INDEX(indexX,indexY);
-        result = &(this->board[i]);
-    }
-    return result;
+    int i = GET_BOARD_INDEX(cordX,cordY);
 
-};
+    return (this->board[i]);
+}
 
 Board::Board()
 {
@@ -38,6 +41,24 @@ Board::Board()
 
 }
 
+void Board::changeColor()
+{
+    (this->colorPlaying == EColor::WHITE) ? this->colorPlaying = EColor::BLACK : this->colorPlaying = EColor::WHITE;
+}
+
+PieceSet& Board::getOpossiteSet(EColor color)
+{
+    if(color == this->blackPieces.getColor()) return this->whitePieces;
+    else return this->blackPieces;
+}
+
+
+PieceSet& Board::getPlayingSet()
+{
+    if(this->colorPlaying == EColor::WHITE) return this->whitePieces;
+    else return this->blackPieces;
+}
+ 
 void Board::initializeBoard()
 {
     for(int i = 0 ; i < 8 ; ++i){
@@ -52,8 +73,8 @@ void Board::initializeBoard()
 
 void Board::setPiece(Spot &spot, Piece &piece)
 {
-    //spot.setPiece(&piece);
-    piece.setSpot(&spot);
+    spot.setPiece(&piece);
+    piece.setCoordinate(spot.getCordX(), spot.getCordY());
 
 }
 
@@ -63,92 +84,166 @@ void Board::setPieces()
     for(int i = 0; i < 16; ++i){
         this->setPiece(this->board[i], this->whitePieces[i]);
         this->setPiece(this->board[BOARD_ARRAY_MAX_INDEX - i], this->blackPieces[i]);
-        
     }
+    this->setPiece(this->board[3], this->whitePieces[4]);
+    this->setPiece(this->board[4], this->whitePieces[3]);
 }
-void Board::printLine(int posY, std::string color1, std::string color2)
+void Board::movePiece(std::unique_ptr<Move> &move)
 {
-    // Define the CELL variable here. 
-   // It represents how many horizontal characters will form one squarite
-   // The number of vertical characters will be CELL/2
-   // You can change it to alter the size of the board 
-   // (an odd number will make the squares look rectangular)
-   int CELL = 6;
+    Move &tmpMove = this->moveHistory.addMoveToHistory(move);
 
-   // Since the width of the characters BLACK and WHITE is half of the height, 
-   // we need to use two characters in a row.
-   // So if we have CELL characters, we must have CELL/2 sublines
-    for (int subLine = 0; subLine < CELL/2; subLine++)
+    switch(tmpMove.getMoveType())
     {
-        // A sub-line is consisted of 8 cells, but we can group it
-        // in 4 iPairs of black&white
-        for (int iPair = 0; iPair < 4; iPair++)
-        {
-            // First cell of the pair
-            for (int subColumn = 0; subColumn < CELL; subColumn++)
-            {
-                Piece *piece = (*this)(iPair *2, posY)->getPiece();
-
-                if(subLine == 1 && subColumn == 3 && piece != nullptr)
-                {
-                    char character = piece->getCharacter();
-                    std::cout<<((piece->eColor == EColor::WHITE) ? WHITE_PIECE_COLOR : BLACK_PIECE_COLOR)<<character;
-                }
-                else
-                {
-                    std::cout<<color1<<" ";
-                }
-            }
-
-            // Second cell of the pair
-            for (int subColumn = 0; subColumn < CELL; subColumn++)
-            {
-                Piece *piece = (*this)(iPair *2 + 1, posY)->getPiece();
-
-                if(subLine == 1 && subColumn == 3 && piece != nullptr)
-                {
-                    
-                    char character = piece->getCharacter();
-                    std::cout<<((piece->eColor == EColor::BLACK) ? BLACK_PIECE_COLOR : WHITE_PIECE_COLOR)<<character;
-                }
-                else
-                {
-                    std::cout<<color2<<" ";
-                }
-            }
-        }
-        std::cout<<RESET<<std::endl;
-
+        case MoveType::Move:
+            this->move(tmpMove);
+            break;
+        case MoveType::Take:
+            this->move(static_cast<TakeMove&>(tmpMove));
+            break;
+        case MoveType::Castle:
+            this->move(static_cast<CastleMove&>(tmpMove));
+            break;
+        case MoveType::SpecialPawnTake:
+            this->move(static_cast<PawnSpecialTakeMove&>(tmpMove));
+            break;
     }
 
 }
 
-void Board::display()
+void Board::move(Move &move)
 {
-    std::cout << "   A     B     C     D     E     F     G     H\n\n";
 
-    for (int iLine = 7; iLine >= 0; iLine--)
-    {
-        if ( iLine%2 == 0)
-        {
-        // Line starting with BLACK
-        printLine(iLine, BLACK_SQUARE, WHITE_SQUARE);
-        }
+    move.getOldSpot().setPiece(nullptr);
+    move.getPieceMoved().move(move);
+    move.getNewSpot().setPiece(&move.getPieceMoved());
 
-        else
-        {
-        // Line starting with WHITE
-        printLine(iLine, WHITE_SQUARE, BLACK_SQUARE);
-        }
-    }
+    
+    this->changeColor();
+    
 }
-
-void Board::test()
+void Board::move(TakeMove &move)
 {
-    Move *mv = nullptr;
+
+    move.getOldSpot().setPiece(nullptr);
+    move.getPieceMoved().move(move);
+    move.getNewSpot().setPiece(&move.getPieceMoved());
+    move.getPieceTaken().kill();
+
+    this->changeColor();
+}
+void Board::move(PawnSpecialTakeMove &move)
+{
+
+    move.getOldSpot().setPiece(nullptr);
+    move.getPieceMoved().move(move);
+    move.getNewSpot().setPiece(&move.getPieceMoved());
+    move.getPieceTaken().kill();
+    move.getPieceTakenSpot().setPiece(nullptr);
+
+    this->changeColor();
+}
+void Board::move(CastleMove &move)
+{
+    move.getOldSpot().setPiece(nullptr);
+    move.getPieceMoved().move(move);
+    move.getNewSpot().setPiece(&move.getPieceMoved());
+    move.getRookOldSpot().setPiece(nullptr);
+    move.getRookMoved().move(move);
+    move.getRookNewSpot().setPiece(&move.getRookMoved());
+
+    this->changeColor();
+}
+void Board::undoPieceMove(Move &move)
+{
+    if(move.getNewSpot().getCordX() == 0 && move.getNewSpot().getCordY() == 2 && move.getPieceMoved().getPieceCode() == EPieceCode::PAWN )
     {
-        std::vector<std::unique_ptr<Move>> test = whitePieces[9].getPossibleMoves();
-        mv = test[0].get();
+        std::cout<<"";
+    }
+    switch(move.getMoveType())
+    {
+        case MoveType::Move:
+            this->undoMove(move);
+            break;
+        case MoveType::Take:
+            this->undoMove(static_cast<TakeMove&>(move));
+            break;
+        case MoveType::Castle:
+            this->undoMove(static_cast<CastleMove&>(move));
+            break;
+        case MoveType::SpecialPawnTake:
+            this->undoMove(static_cast<PawnSpecialTakeMove&>(move));
+            break;
     }
     
+}
+std::unique_ptr<Move> Board::undoAndGetLastMove()
+{
+    std::unique_ptr<Move> lastMove = std::move(this->moveHistory.getAndUndoLastMoveUniquePtr());
+
+    this->undoPieceMove(*lastMove.get());
+
+
+    return lastMove;
+}
+
+void Board::undoLastMove()
+{
+    std::unique_ptr<Move> lastMove = std::move(this->moveHistory.getAndUndoLastMoveUniquePtr());
+    this->undoPieceMove(*lastMove.get());
+
+};
+
+void Board::undoMove(Move &move)
+{
+    move.getPieceMoved().undoMove(move);
+    move.getOldSpot().setPiece(&move.getPieceMoved());
+    move.getNewSpot().setPiece(nullptr);
+
+    this->changeColor();
+}
+void Board::undoMove(TakeMove &move)
+{
+    move.getPieceMoved().undoMove(move);
+    move.getOldSpot().setPiece(&move.getPieceMoved());
+    move.getPieceTaken().revive();
+    move.getNewSpot().setPiece(&move.getPieceTaken());
+
+    this->changeColor();
+
+}
+void Board::undoMove(PawnSpecialTakeMove &move)
+{
+    move.getPieceMoved().undoMove(move);
+    move.getOldSpot().setPiece(&move.getPieceMoved());
+    move.getNewSpot().setPiece(nullptr);
+    move.getPieceTaken().revive();
+    move.getPieceTakenSpot().setPiece(&move.getPieceTaken());
+
+    this->changeColor();
+
+}
+void Board::undoMove(CastleMove &move)
+{
+    move.getPieceMoved().undoMove(move);
+    move.getOldSpot().setPiece(&move.getPieceMoved());
+    move.getNewSpot().setPiece(nullptr);
+    move.getRookMoved().undoMove(move);
+    move.getRookOldSpot().setPiece(&move.getRookMoved());
+    move.getRookNewSpot().setPiece(nullptr);
+
+    this->changeColor();
+}
+
+ void Board::getPossibleMoves(std::vector<std::unique_ptr<Move>> &possibleMoves)
+{
+
+    PieceSet& playingSet = this->getPlayingSet();
+
+    for(int i = 0; i < PIECE_COUNT; ++i)
+    {
+        playingSet[i].getPossibleMoves(possibleMoves,this->moveManager);
+    }
+
+    std::sort(possibleMoves.begin(), possibleMoves.end());
+
 }
