@@ -48,7 +48,7 @@ void Board::changeColor()
 
 PieceSet& Board::getOpossiteSet(EColor color)
 {
-    if(color == this->blackPieces.getColor()) return this->whitePieces;
+    if(color == EColor::BLACK) return this->whitePieces;
     else return this->blackPieces;
 }
 
@@ -58,7 +58,13 @@ PieceSet& Board::getPlayingSet()
     if(this->colorPlaying == EColor::WHITE) return this->whitePieces;
     else return this->blackPieces;
 }
- 
+
+PieceSet& Board::getSetByColor(EColor color)
+{
+    if(color == EColor::WHITE) return this->whitePieces;
+    else return this->blackPieces;
+}
+
 void Board::initializeBoard()
 {
     for(int i = 0 ; i < 8 ; ++i){

@@ -17,6 +17,7 @@
 #include <memory>
 #include <algorithm>
 
+#include "king.hpp"
 #include "aiEngine.hpp"
 #include "boardEvaluator.hpp"
 #include "move.hpp"
@@ -26,7 +27,7 @@
 
 
 /************************************* Implementions *************************************/
-int AIEngine::minimax(Board &board, int depth, int alpha, int beta, EColor color)
+int AIEngine::minimax(Board &board, int depth, int alpha, int beta, EColor color, King& whiteKing, King& blackKing)
 {
     if(depth == 0) //or game is over
     {
@@ -42,15 +43,13 @@ int AIEngine::minimax(Board &board, int depth, int alpha, int beta, EColor color
         board.getPossibleMoves(possibleMoves);
         for(int i = 0; i < possibleMoves.size(); ++i)
         {
-
             board.movePiece(possibleMoves[i]);
-
-
-            eval = minimax(board, depth-1, alpha, beta, EColor::BLACK);
-            maxEval = std::max(maxEval, eval);
-            alpha = std::max(alpha, eval);
-
-
+            if(board.moveManager.validateMoveForCheck(whiteKing))
+            {
+                eval = minimax(board, depth-1, alpha, beta, EColor::BLACK, whiteKing, blackKing);
+                maxEval = std::max(maxEval, eval);
+                alpha = std::max(alpha, eval);
+            }
             board.undoLastMove();
 
             if(beta <= alpha)
@@ -66,10 +65,12 @@ int AIEngine::minimax(Board &board, int depth, int alpha, int beta, EColor color
         for(int i = 0; i < possibleMoves.size(); ++i)
         {
             board.movePiece(possibleMoves[i]);
-
-            eval = minimax(board, depth-1, alpha, beta, EColor::WHITE);
-            minEval = std::min(minEval, eval);
-            beta = std::min(beta, eval);
+            if(board.moveManager.validateMoveForCheck(blackKing))
+            {
+                eval = minimax(board, depth-1, alpha, beta, EColor::WHITE, whiteKing, blackKing);
+                minEval = std::min(minEval, eval);
+                beta = std::min(beta, eval);
+            }
 
             //DisplayBoard::displayBoard(board);
             board.undoLastMove();
@@ -89,6 +90,8 @@ void AIEngine::move()
     std::unique_ptr<Move> bestMove;
     std::unique_ptr<Move> tmpMove;
     board.getPossibleMoves(possibleMoves);
+    King &whiteKing = this->board.getSetByColor(EColor::WHITE).getKing();
+    King &blackKing = this->board.getSetByColor(EColor::BLACK).getKing();
 
     if(this->board.getPlayingColor() == EColor::WHITE)
     {
@@ -98,7 +101,7 @@ void AIEngine::move()
         {
 
             this->board.movePiece(possibleMoves[i]);
-            tempVal = this->minimax(this->board, DEPTH, -INFINITY, +INFINITY, EColor::BLACK);
+            tempVal = this->minimax(this->board, DEPTH, -INFINITY, +INFINITY, EColor::BLACK, whiteKing, blackKing);
             tmpMove = std::move(this->board.undoAndGetLastMove());
             if(tempVal > maxVal) bestMove = std::move(tmpMove);
         }
@@ -109,7 +112,7 @@ void AIEngine::move()
         for(int i = 0; i < possibleMoves.size(); ++i)
         {
             this->board.movePiece(possibleMoves[i]);
-            tempVal = this->minimax(this->board, DEPTH, -INFINITY, +INFINITY, EColor::WHITE);
+            tempVal = this->minimax(this->board, DEPTH, -INFINITY, +INFINITY, EColor::WHITE, whiteKing, blackKing);
             tmpMove = std::move(this->board.undoAndGetLastMove());
             if(tempVal < minVal) bestMove = std::move(tmpMove);
         }

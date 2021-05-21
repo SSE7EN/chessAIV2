@@ -39,7 +39,7 @@ class AIEngine
 
     
     private:
-        int minimax(Board &board, int depth, int alpha, int beta, EColor color);
+        int minimax(Board &board, int depth, int alpha, int beta, EColor color, King &whiteKing, King& blackKing);
         
         
         Board &board;

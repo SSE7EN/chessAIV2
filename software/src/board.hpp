@@ -41,6 +41,7 @@ class Board
         MoveManager moveManager{*this};
         PieceSet& getOpossiteSet(EColor color);
         PieceSet& getPlayingSet();
+        PieceSet& getSetByColor(EColor);
         void getPossibleMoves(std::vector<std::unique_ptr<Move>>& possibleMoves);
         EColor getPlayingColor(){return this->colorPlaying;}
 
